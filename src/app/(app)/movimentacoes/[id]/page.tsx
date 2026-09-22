@@ -100,11 +100,11 @@ export default async function MovimentacaoDetalhePage({ params }: MovimentacaoDe
             {itens?.map((item) => {
               // O supabase-js tipa essa relação como array (mesmo sendo 1 produto por item),
               // então pegamos sempre a primeira posição
-              const produto = item.products?.[0];
+              const produto = item.products as unknown as { name: string; flavor: string | null } | null;
               return (
                 <tr key={item.id} className="border-b border-border last:border-0">
                   <td className="px-4 py-3 text-foreground">
-                    {item.products?.name ?? "—"}
+                    {produto?.name ?? "—"}
                     {produto?.flavor && <span className="text-muted"> ({produto.flavor})</span>}
                   </td>
                   <td className="px-4 py-3 text-muted">{item.amount}</td>
