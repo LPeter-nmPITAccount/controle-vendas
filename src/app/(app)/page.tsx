@@ -11,7 +11,7 @@ const formatBRL = (value: number) =>
   new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value);
 
 // Formata data ISO pro padrão brasileiro (dd/mm/aaaa)
-const formatDate = (iso: string) => new Intl.DateTimeFormat("pt-BR").format(new Date(iso));
+ formatDate = (iso: string) => new Intl.DateTimeFormat("pt-BR", { timeZone: "America/Sao_Paulo" }).format(new Date(iso));
 
 interface MovimentacoesPageProps {
   // No Next.js atual, searchParams chega como uma Promise (precisa de "await")
