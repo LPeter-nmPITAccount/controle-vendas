@@ -125,7 +125,6 @@ export function ClientesManager({ initialClientes }: { initialClientes: Cliente[
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Clientes</h1>
-          <p className="text-sm text-muted">Cadastro de clientes e controle de contas</p>
         </div>
         <Button onClick={openCreateModal}>
           <Plus size={16} /> Novo cliente
