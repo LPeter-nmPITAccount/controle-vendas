@@ -35,7 +35,7 @@ export default async function MovimentacoesPage({ searchParams }: MovimentacoesP
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Movimentações</h1>
-          <p className="text-sm text-muted">Últimas vendas e contas em aberto</p>
+          <p className="text-sm text-muted">Últimas pedidos para Fernanda anotar</p>
         </div>
         {/* buttonVariants() gera a MESMA classe CSS que o <Button>, mas aqui aplicada
             direto num <Link> — assim ele parece um botão mas continua sendo,
