@@ -9,8 +9,7 @@ import { Input } from "@/components/ui/input";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 // Formata um horário (ex: "14:35") pra mostrar até quando o login fica bloqueado
-const formatTime = (iso: string) => 
-  new Intl.DateTimeFormat("pt-BR", { timeStyle: "short", timeZone: "America/Sao_Paulo" }).format(new Date(iso));
+const formatTime = (iso: string) => new Intl.DateTimeFormat("pt-BR", { timeStyle: "short" }).format(new Date(iso));
 
 export default function LoginPage() {
   const router = useRouter();
