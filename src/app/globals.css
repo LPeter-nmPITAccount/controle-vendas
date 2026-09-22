@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+/* ===================================================================
+   TOKENS DE DESIGN — o "vocabulário" de cores do sistema inteiro.
+   Em vez de espalhar códigos hex direto pelos componentes, definimos
+   tudo aqui, uma vez só. Se um dia você quiser mudar o tom do dourado,
+   por exemplo, muda numa linha só e reflete no sistema inteiro.
+
+   O tema ESCURO é o padrão (:root), porque foi o que você pediu.
+   A classe .light (aplicada pelo botão de troca de tema) sobrescreve
+   esses valores pro tema claro.
+=================================================================== */
+:root {
+  --background: #14181d;       /* fundo principal: um chumbo escuro, não preto puro */
+  --surface: #1c222a;          /* fundo de cards, menu superior, inputs */
+  --surface-hover: #232a33;    /* fundo de itens ao passar o mouse */
+  --border: #2a313b;           /* bordas sutis entre elementos */
+  --foreground: #e8eaed;       /* cor do texto principal */
+  --muted: #9aa4b2;            /* texto secundário (legendas, datas, etc.) */
+  --accent: #d9a441;           /* dourado: cor de destaque (botões, links ativos) */
+  --accent-foreground: #14181d; /* texto sobre um fundo dourado (precisa ser escuro pro contraste) */
+  --success: #4c9a6a;          /* verde: usado pra status "Pago" */
+  --warning: #d9a441;          /* mesmo dourado: usado pra "Para Anotar" */
+  --danger: #c4645a;           /* vermelho suave: reservado pra estados de erro/alerta */
+}
+
+.light {
+  --background: #f7f5f0;       /* fundo claro, com leve tom de papel (não branco puro) */
+  --surface: #ffffff;
+  --surface-hover: #efebe2;
+  --border: #e2ddd0;
+  --foreground: #1c1a17;
+  --muted: #6b6558;
+  --accent: #b5842e;           /* dourado mais escuro, pra manter contraste no fundo claro */
+  --accent-foreground: #ffffff;
+  --success: #2f7a4c;
+  --warning: #b5842e;
+  --danger: #a8453a;
+}
+
+/* Conecta os tokens acima às classes utilitárias do Tailwind
+   (isso permite escrever bg-background, text-foreground, border-border, etc.) */
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-border: var(--border);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  /* Pilha de fontes do sistema: usa a fonte nativa de cada SO (rápido, sem
+     download nenhum) mantendo uma aparência limpa e moderna em qualquer lugar */
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+/* Transição suave ao trocar de tema, em vez de um "flash" abrupto de cores */
+* {
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
