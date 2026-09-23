@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Eye, Plus } from "lucide-react";
 import { Tooltip } from "@/components/ui/tooltip";
+import { DeleteMovementButton } from "@/components/delete-movement-button";
 import { createClient } from "@/lib/supabase/server";
 import { StatusBadge } from "@/components/status-badge";
 import { FeedbackBanner } from "@/components/ui/feedback-banner";
@@ -10,8 +11,8 @@ import { buttonVariants } from "@/components/ui/button";
 const formatBRL = (value: number) =>
   new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value);
 
-// Formata data ISO pro padrão brasileiro (dd/mm/aaaa)
-const formatDate = (iso: string) => new Intl.DateTimeFormat("pt-BR").format(new Date(iso));
+const formatDate = (iso: string) =>
+  new Intl.DateTimeFormat("pt-BR", { dateStyle: "short", timeZone: "UTC" }).format(new Date(iso));
 
 interface MovimentacoesPageProps {
   // No Next.js atual, searchParams chega como uma Promise (precisa de "await")
@@ -35,7 +36,7 @@ export default async function MovimentacoesPage({ searchParams }: MovimentacoesP
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Movimentações</h1>
-          <p className="text-sm text-muted">Últimas pedidos para Fernanda anotar</p>
+          <p className="text-sm text-muted">Últimas vendas e contas em aberto</p>
         </div>
         {/* buttonVariants() gera a MESMA classe CSS que o <Button>, mas aqui aplicada
             direto num <Link> — assim ele parece um botão mas continua sendo,
@@ -95,15 +96,18 @@ export default async function MovimentacoesPage({ searchParams }: MovimentacoesP
                 </td>
                 <td className="px-4 py-3 text-muted">{formatDate(m.created_at)}</td>
                 <td className="px-4 py-3 text-right">
-                  <Tooltip label="Ver detalhes da movimentação">
-                    <Link
-                      href={`/movimentacoes/${m.id}`}
-                      aria-label="Ver detalhes"
-                      className="inline-flex rounded-lg p-2 text-muted hover:bg-surface-hover hover:text-foreground"
-                    >
-                      <Eye size={16} />
-                    </Link>
-                  </Tooltip>
+                  <div className="flex justify-end gap-1">
+                    <Tooltip label="Ver detalhes da movimentação">
+                      <Link
+                        href={`/movimentacoes/${m.id}`}
+                        aria-label="Ver detalhes"
+                        className="inline-flex rounded-lg p-2 text-muted hover:bg-surface-hover hover:text-foreground"
+                      >
+                        <Eye size={16} />
+                      </Link>
+                    </Tooltip>
+                    <DeleteMovementButton movementId={m.id} />
+                  </div>
                 </td>
               </tr>
             ))}
