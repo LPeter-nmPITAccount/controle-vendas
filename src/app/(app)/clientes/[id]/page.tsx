@@ -1,12 +1,14 @@
 import Link from "next/link";
 import { ArrowLeft, Eye } from "lucide-react";
 import { Tooltip } from "@/components/ui/tooltip";
+import { DeleteMovementButton } from "@/components/delete-movement-button";
 import { createClient } from "@/lib/supabase/server";
 import { StatusBadge } from "@/components/status-badge";
 
 const formatBRL = (value: number) =>
   new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value);
-const formatDate = (iso: string) => new Intl.DateTimeFormat("pt-BR").format(new Date(iso));
+const formatDate = (iso: string) =>
+  new Intl.DateTimeFormat("pt-BR", { timeZone: "America/Sao_Paulo" }).format(new Date(iso));
 
 interface ClienteDetalhePageProps {
   // rota dinâmica: params também chega como Promise nessa versão do Next.js
@@ -95,15 +97,18 @@ export default async function ClienteDetalhePage({ params }: ClienteDetalhePageP
                 <td className="px-4 py-3 font-medium text-foreground">{formatBRL(m.price_total)}</td>
                 <td className="px-4 py-3 text-muted">{formatDate(m.created_at)}</td>
                 <td className="px-4 py-3 text-right">
-                  <Tooltip label="Ver detalhes da movimentação">
-                    <Link
-                      href={`/movimentacoes/${m.id}`}
-                      aria-label="Ver detalhes"
-                      className="inline-flex rounded-lg p-2 text-muted hover:bg-surface-hover hover:text-foreground"
-                    >
-                      <Eye size={16} />
-                    </Link>
-                  </Tooltip>
+                  <div className="flex justify-end gap-1">
+                    <Tooltip label="Ver detalhes da movimentação">
+                      <Link
+                        href={`/movimentacoes/${m.id}`}
+                        aria-label="Ver detalhes"
+                        className="inline-flex rounded-lg p-2 text-muted hover:bg-surface-hover hover:text-foreground"
+                      >
+                        <Eye size={16} />
+                      </Link>
+                    </Tooltip>
+                    <DeleteMovementButton movementId={m.id} />
+                  </div>
                 </td>
               </tr>
             ))}
