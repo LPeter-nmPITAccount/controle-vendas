@@ -34,7 +34,6 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         userType={(profile?.type as "admin" | "user") ?? "user"}
       />
       <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">{children}</main>
-      <CalculatorWidget />
     </div>
   );
 }
