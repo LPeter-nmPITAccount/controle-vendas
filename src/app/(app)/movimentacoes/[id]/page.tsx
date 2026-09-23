@@ -9,7 +9,7 @@ const formatBRL = (value: number) =>
   new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value);
 
 const formatDateTime = (iso: string) => 
-  new Intl.DateTimeFormat("pt-BR", { dateStyle: "short", timeStyle: "short" }).format(new Date(iso));
+  new Intl.DateTimeFormat("pt-BR", { dateStyle: "short", timeZone: "UTC" }).format(new Date(iso));
 
 interface MovimentacaoDetalhePageProps {
   params: Promise<{ id: string }>;
