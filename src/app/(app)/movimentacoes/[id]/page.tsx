@@ -4,12 +4,14 @@ import { createClient } from "@/lib/supabase/server";
 import { StatusBadge } from "@/components/status-badge";
 import { StatusEditor } from "./status-editor";
 import { EditItemsButton } from "./edit-items-button";
+import { DeleteMovementButton } from "@/components/delete-movement-button";
 
 const formatBRL = (value: number) =>
   new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value);
-
-const formatDateTime = (iso: string) => 
-  new Intl.DateTimeFormat("pt-BR", { dateStyle: "short", timeZone: "UTC" }).format(new Date(iso));
+const formatDateTime = (iso: string) =>
+  new Intl.DateTimeFormat("pt-BR", { dateStyle: "short", timeStyle: "short", timeZone: "America/Sao_Paulo" }).format(
+    new Date(iso)
+  );
 
 interface MovimentacaoDetalhePageProps {
   params: Promise<{ id: string }>;
@@ -75,7 +77,7 @@ export default async function MovimentacaoDetalhePage({ params }: MovimentacaoDe
         <StatusEditor movementId={movimentacao.id} currentStatus={movimentacao.status} />
       </div>
 
-      <div className="rounded-xl border border-border bg-surface">
+      <div className="overflow-x-auto rounded-xl border border-border bg-surface">
         <div className="flex items-center justify-between border-b border-border px-4 py-3">
           <p className="text-sm font-medium text-foreground">Itens</p>
           <EditItemsButton
@@ -100,8 +102,12 @@ export default async function MovimentacaoDetalhePage({ params }: MovimentacaoDe
           </thead>
           <tbody>
             {itens?.map((item) => {
-              // O supabase-js tipa essa relação como array (mesmo sendo 1 produto por item),
-              // então pegamos sempre a primeira posição
+              // O supabase-js às vezes erra o tipo dessa relação: ele ACHA que é uma
+              // lista (por isso o "?.[0]" que tínhamos antes), mas na prática ela
+              // sempre vem como um objeto único. Em vez de indexar [0] (que resultava
+              // em "undefined" o tempo todo, deixando o nome do produto sumido) ou
+              // acessar .name direto (que o TypeScript recusa, achando ainda que é
+              // lista), fazemos um cast explícito dizendo o formato real dessa relação.
               const produto = item.products as unknown as { name: string; flavor: string | null } | null;
               return (
                 <tr key={item.id} className="border-b border-border last:border-0">
@@ -129,6 +135,21 @@ export default async function MovimentacaoDetalhePage({ params }: MovimentacaoDe
             </tr>
           </tfoot>
         </table>
+      </div>
+
+      {/* "Zona de perigo": separada visualmente do resto, com uma borda vermelha
+          sutil — um padrão comum pra deixar claro que essa ação é diferente
+          (destrutiva) das outras da página */}
+      <div className="rounded-xl border border-danger/30 bg-danger/5 p-4">
+        <p className="mb-2 text-sm font-medium text-foreground">Excluir</p>
+        <p className="mb-3 text-sm text-muted">
+          Remove essa movimentação e seus itens permanentemente. Não dá pra desfazer.
+        </p>
+        <DeleteMovementButton
+          movementId={movimentacao.id}
+          variant="button"
+          redirectTo={`/clientes/${movimentacao.client_id}`}
+        />
       </div>
     </div>
   );
