@@ -69,7 +69,7 @@ export default async function ClienteDetalhePage({ params }: ClienteDetalhePageP
         )}
       </div>
 
-      <div className="overflow-x-auto rounded-xl border border-border bg-surface">
+      <div className="rounded-xl border border-border bg-surface">
         <table className="w-full text-left text-sm">
           <thead>
             <tr className="border-b border-border text-muted">
