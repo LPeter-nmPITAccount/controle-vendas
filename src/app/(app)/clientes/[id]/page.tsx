@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowLeft, Eye } from "lucide-react";
 import { Tooltip } from "@/components/ui/tooltip";
 import { DeleteMovementButton } from "@/components/delete-movement-button";
+import { MovementQuickView } from "@/components/movement-quick-view";
 import { createClient } from "@/lib/supabase/server";
 import { StatusBadge } from "@/components/status-badge";
 
@@ -69,7 +70,7 @@ export default async function ClienteDetalhePage({ params }: ClienteDetalhePageP
         )}
       </div>
 
-      <div className="rounded-xl border border-border bg-surface">
+      <div className="overflow-x-auto rounded-xl border border-border bg-surface">
         <table className="w-full text-left text-sm">
           <thead>
             <tr className="border-b border-border text-muted">
@@ -98,6 +99,14 @@ export default async function ClienteDetalhePage({ params }: ClienteDetalhePageP
                 <td className="px-4 py-3 text-muted">{formatDate(m.created_at)}</td>
                 <td className="px-4 py-3 text-right">
                   <div className="flex justify-end gap-1">
+                    <MovementQuickView
+                      movementId={m.id}
+                      clientName={cliente.name}
+                      type={m.type}
+                      status={m.status}
+                      priceTotal={m.price_total}
+                      createdAt={m.created_at}
+                    />
                     <Tooltip label="Ver detalhes da movimentação">
                       <Link
                         href={`/movimentacoes/${m.id}`}
