@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Eye, Plus } from "lucide-react";
 import { Tooltip } from "@/components/ui/tooltip";
 import { DeleteMovementButton } from "@/components/delete-movement-button";
+import { MovementQuickView } from "@/components/movement-quick-view";
 import { createClient } from "@/lib/supabase/server";
 import { StatusBadge } from "@/components/status-badge";
 import { FeedbackBanner } from "@/components/ui/feedback-banner";
@@ -11,8 +12,12 @@ import { buttonVariants } from "@/components/ui/button";
 const formatBRL = (value: number) =>
   new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value);
 
+// Formata data ISO pro padrão brasileiro (dd/mm/aaaa). O timeZone é dito
+// EXPLICITAMENTE aqui porque essa formatação roda no servidor (Server Component),
+// e servidores normalmente rodam em UTC — sem isso, a data/hora aparece errada
+// pra quem está no Brasil (UTC é 3h à frente do horário de Brasília).
 const formatDate = (iso: string) =>
-  new Intl.DateTimeFormat("pt-BR", { dateStyle: "short", timeZone: "UTC" }).format(new Date(iso));
+  new Intl.DateTimeFormat("pt-BR", { timeZone: "America/Sao_Paulo" }).format(new Date(iso));
 
 interface MovimentacoesPageProps {
   // No Next.js atual, searchParams chega como uma Promise (precisa de "await")
@@ -52,7 +57,7 @@ export default async function MovimentacoesPage({ searchParams }: MovimentacoesP
           global nem de bibliotecas extras */}
       {created && <FeedbackBanner type="success" message="Movimentação registrada com sucesso." />}
 
-      <div className="rounded-xl border border-border bg-surface">
+      <div className="overflow-x-auto rounded-xl border border-border bg-surface">
         <table className="w-full text-left text-sm">
           <thead>
             <tr className="border-b border-border text-muted">
@@ -83,34 +88,46 @@ export default async function MovimentacoesPage({ searchParams }: MovimentacoesP
               </tr>
             )}
 
-            {movements?.map((m) => (
-              <tr key={m.id} className="border-b border-border last:border-0 hover:bg-surface-hover">
-                {/* @ts-expect-error -- o supabase-js tipa a relação como array, mas com FK única vem sempre 1 objeto */}
-                <td className="px-4 py-3 text-foreground">{m.clients?.name ?? "—"}</td>
-                <td className="px-4 py-3 text-muted">{m.type}</td>
-                <td className="px-4 py-3">
-                  <StatusBadge status={m.status} />
-                </td>
-                <td className="px-4 py-3 font-medium text-foreground">
-                  {formatBRL(m.price_total)}
-                </td>
-                <td className="px-4 py-3 text-muted">{formatDate(m.created_at)}</td>
-                <td className="px-4 py-3 text-right">
-                  <div className="flex justify-end gap-1">
-                    <Tooltip label="Ver detalhes da movimentação">
-                      <Link
-                        href={`/movimentacoes/${m.id}`}
-                        aria-label="Ver detalhes"
-                        className="inline-flex rounded-lg p-2 text-muted hover:bg-surface-hover hover:text-foreground"
-                      >
-                        <Eye size={16} />
-                      </Link>
-                    </Tooltip>
-                    <DeleteMovementButton movementId={m.id} />
-                  </div>
-                </td>
-              </tr>
-            ))}
+            {movements?.map((m) => {
+              // Mesmo cast explícito usado na página de detalhe: o supabase-js
+              // tipa essa relação como lista, mas ela sempre vem como 1 objeto só.
+              const cliente = m.clients as unknown as { name: string } | null;
+              return (
+                <tr key={m.id} className="border-b border-border last:border-0 hover:bg-surface-hover">
+                  <td className="px-4 py-3 text-foreground">{cliente?.name ?? "—"}</td>
+                  <td className="px-4 py-3 text-muted">{m.type}</td>
+                  <td className="px-4 py-3">
+                    <StatusBadge status={m.status} />
+                  </td>
+                  <td className="px-4 py-3 font-medium text-foreground">
+                    {formatBRL(m.price_total)}
+                  </td>
+                  <td className="px-4 py-3 text-muted">{formatDate(m.created_at)}</td>
+                  <td className="px-4 py-3 text-right">
+                    <div className="flex justify-end gap-1">
+                      <MovementQuickView
+                        movementId={m.id}
+                        clientName={cliente?.name ?? "—"}
+                        type={m.type}
+                        status={m.status}
+                        priceTotal={m.price_total}
+                        createdAt={m.created_at}
+                      />
+                      <Tooltip label="Ver detalhes da movimentação">
+                        <Link
+                          href={`/movimentacoes/${m.id}`}
+                          aria-label="Ver detalhes"
+                          className="inline-flex rounded-lg p-2 text-muted hover:bg-surface-hover hover:text-foreground"
+                        >
+                          <Eye size={16} />
+                        </Link>
+                      </Tooltip>
+                      <DeleteMovementButton movementId={m.id} />
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
