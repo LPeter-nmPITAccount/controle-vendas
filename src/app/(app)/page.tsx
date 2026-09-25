@@ -66,7 +66,7 @@ export default async function MovimentacoesPage({ searchParams }: MovimentacoesP
               <th className="px-4 py-3 font-medium">Status</th>
               <th className="px-4 py-3 font-medium">Total</th>
               <th className="px-4 py-3 font-medium">Data</th>
-              <th className="px-4 py-3 font-medium text-right">Detalhes</th>
+              <th className="px-4 py-3 font-medium text-right">Ação</th>
             </tr>
           </thead>
           <tbody>
