@@ -70,7 +70,6 @@ export function UsuariosManager({
     <div className="flex flex-col gap-6">
       <div>
         <h1 className="text-2xl font-bold text-foreground">Usuários</h1>
-        <p className="text-sm text-muted">Gerenciamento de usuários administradores e auxiliares</p>
       </div>
 
       {/* Aviso explicando por que não existe um botão "novo usuário" aqui */}
