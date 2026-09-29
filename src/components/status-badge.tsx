@@ -1,12 +1,13 @@
 import { cn } from "@/lib/utils";
-
+ 
 // Mapa: pra cada valor possível do enum movement_status, qual cor de fundo/texto usar.
 // Centralizar isso aqui evita ficar repetindo "if status === ..." em cada tela.
 const STATUS_STYLES: Record<string, string> = {
   "Para Anotar": "bg-warning/15 text-warning", // ainda precisa ser repassado
   Anotado: "bg-success/15 text-success", // já foi repassado/registrado
+  "Já Pago": "bg-accent/15 text-accent", // o cliente pagou direto, sem precisar repassar
 };
-
+ 
 export function StatusBadge({ status }: { status: string }) {
   return (
     <span
