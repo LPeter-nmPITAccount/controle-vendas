@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { FeedbackBanner } from "@/components/ui/feedback-banner";
 
-const STATUS_OPTIONS = ["Para Anotar", "Anotado"] as const;
+const STATUS_OPTIONS = ["Para Anotar", "Anotado", "Já Pago"] as const;
 
 interface StatusEditorProps {
   movementId: string;
